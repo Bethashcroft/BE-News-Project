@@ -45,6 +45,11 @@ describe("GET: 200 - /api/topics", () => {
 
 describe("404 - /api/somethingElse", () => {
   it("should respond with a 404 error if pathway is incorrect", () => {
-    return request(app).get("/api/somethingElse").expect(404);
+    return request(app)
+      .get("/api/somethingElse")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("invalid path");
+      });
   });
 });

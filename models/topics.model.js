@@ -6,3 +6,4 @@ exports.chooseTopics = () => {
     return response.rows;
   });
 };
+
