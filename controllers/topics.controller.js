@@ -1,11 +1,19 @@
-const { chooseTopics } = require("../models/topics.model");
+const { chooseTopics, chooseArticleById } = require("../models/topics.model");
 
-exports.getTopics = (request, response) => {
+exports.getTopics = (request, response, next) => {
   chooseTopics()
     .then((topics) => {
+      console.log(topics);
       response.status(200).send({ topics: topics });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch(next);
+};
+
+exports.getArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+  chooseArticleById(article_id)
+    .then((article) => {
+      response.status(200).send({ article });
+    })
+    .catch(next);
 };
