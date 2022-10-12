@@ -76,4 +76,12 @@ describe("GET: 200 - api/articles/:article_id", () => {
         expect(body.msg).toBe("Id not found");
       });
   });
+  test("should respond with a 400 error if article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/letterid")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400! Bad request!");
+      });
+  });
 });

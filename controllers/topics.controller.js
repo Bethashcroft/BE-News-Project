@@ -3,7 +3,6 @@ const { chooseTopics, chooseArticleById } = require("../models/topics.model");
 exports.getTopics = (request, response, next) => {
   chooseTopics()
     .then((topics) => {
-      console.log(topics);
       response.status(200).send({ topics: topics });
     })
     .catch(next);
