@@ -1,4 +1,8 @@
-const { chooseTopics, chooseArticleById } = require("../models/topics.model");
+const {
+  chooseTopics,
+  chooseArticleById,
+  chooseUsers,
+} = require("../models/topics.model");
 
 exports.getTopics = (request, response, next) => {
   chooseTopics()
@@ -13,6 +17,14 @@ exports.getArticleById = (request, response, next) => {
   chooseArticleById(article_id)
     .then((article) => {
       response.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.getUsers = (request, response, next) => {
+  chooseUsers()
+    .then((users) => {
+      response.status(200).send({ users });
     })
     .catch(next);
 };

@@ -3,7 +3,6 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
-const topicData = require("../db/data/test-data/topics");
 
 beforeEach(() => seed(testData));
 
@@ -82,6 +81,27 @@ describe("GET: 200 - api/articles/:article_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("400! Bad request!");
+      });
+  });
+});
+
+describe("GET: 200 - /api/users", () => {
+  test("Responds with an array of objects with user properties", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const bodyUsers = body.users;
+        expect(bodyUsers).toHaveLength(4);
+        bodyUsers.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
       });
   });
 });
