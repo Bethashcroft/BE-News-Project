@@ -91,34 +91,17 @@ describe("GET: 200 - /api/users", () => {
       .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        const expectedUsers = [
-          {
-            username: "butter_bridge",
-            name: "jonny",
-            avatar_url:
-              "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
-          },
-          {
-            username: "icellusedkars",
-            name: "sam",
-            avatar_url:
-              "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4",
-          },
-          {
-            username: "rogersop",
-            name: "paul",
-            avatar_url:
-              "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
-          },
-          {
-            username: "lurker",
-            name: "do_nothing",
-            avatar_url:
-              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
-          },
-        ];
-        expect(body.users).toEqual(expectedUsers);
-        expect(body.users).toHaveLength(4);
+        const bodyUsers = body.users;
+        expect(bodyUsers).toHaveLength(4);
+        bodyUsers.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
       });
   });
 });
