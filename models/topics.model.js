@@ -34,3 +34,19 @@ exports.chooseArticleById = (id) => {
       return rows[0];
     });
 };
+
+exports.updateArticle = (id, votes) => {
+  console.log("in the model");
+  const updateQuery = `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`;
+
+  return db.query(updateQuery, [votes, id]).then((response) => {
+    console.log(response);
+    if (response.rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        msg: "404! this does not exist!",
+      });
+    }
+    return response.rows[0];
+  });
+};
