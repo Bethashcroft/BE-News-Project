@@ -105,3 +105,51 @@ describe("GET: 200 - /api/users", () => {
       });
   });
 });
+
+describe("PATCH: 200 - /api/articles/:articles_id", () => {
+  test("Updates votes with the required amount and returns the updated article", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article.votes).toBe(101);
+      });
+  });
+  test("400 Error if the article_id is invalid", () => {
+    return request(app)
+      .patch("/api/articles/northcoders")
+      .send({ inc_votes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400! Bad request!");
+      });
+  });
+  test("400 Error if the inc_votes is an invalid data type", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "northcoders" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400! Bad request!");
+      });
+  });
+  test("404 Error if the article_id does not exist", () => {
+    return request(app)
+      .patch("/api/articles/9000")
+      .send({ inc_votes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404! this does not exist!");
+      });
+  });
+  test("400 Error if the inc_votes key is not sent with to the body", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send()
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("400! Bad request!");
+      });
+  });
+});
