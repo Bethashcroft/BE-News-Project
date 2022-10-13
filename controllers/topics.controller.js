@@ -31,7 +31,6 @@ exports.getUsers = (request, response, next) => {
 };
 
 exports.patchArticles = (request, response, next) => {
-  console.log("in the controller");
   const { article_id } = request.params;
   const { inc_votes } = request.body;
 
