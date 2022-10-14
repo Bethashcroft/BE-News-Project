@@ -201,4 +201,12 @@ describe.only("GET: 200 - /api/articles", () => {
         expect(body.msg).toEqual("This topic does not exist!");
       });
   });
+  test("Responds with an empty array when no articles exists for the topic", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual([]);
+      });
+  });
 });

@@ -76,6 +76,12 @@ exports.chooseAllArticles = (topic) => {
       }
     }
 
+    if (topic) {
+      if (slugArray.includes(topic) && articles.length <= 0) {
+        return [];
+      }
+    }
+
     sqlCommand += ` GROUP BY articles.article_id ORDER BY created_at desc;`;
 
     return db.query(sqlCommand, articleArray).then((response) => {
