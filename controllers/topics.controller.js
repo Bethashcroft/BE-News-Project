@@ -3,6 +3,7 @@ const {
   chooseArticleById,
   chooseUsers,
   updateArticle,
+  chooseAllArticles,
 } = require("../models/topics.model");
 
 exports.getTopics = (request, response, next) => {
@@ -37,6 +38,15 @@ exports.patchArticles = (request, response, next) => {
   updateArticle(article_id, inc_votes)
     .then((article) => {
       response.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.getAllArticles = (request, response, next) => {
+  const { topic } = request.query;
+  chooseAllArticles(topic)
+    .then((articles) => {
+      response.status(200).send({ articles });
     })
     .catch(next);
 };

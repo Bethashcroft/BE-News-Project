@@ -64,11 +64,10 @@ describe("GET: 200 - api/articles/:article_id", () => {
           body: "I find this existence challenging",
           created_at: expect.any(String),
           votes: 100,
-          comment_count: 11,
         });
       });
   });
-  test.only("200 - Responds with the correct comment_count", () => {
+  test("200 - Responds with the correct comment_count", () => {
     return request(app)
       .get("/api/articles/1")
       .expect(200)
@@ -160,6 +159,46 @@ describe("PATCH: 200 - /api/articles/:articles_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("400! Bad request!");
+      });
+  });
+});
+
+describe.only("GET: 200 - /api/articles", () => {
+  test("Return an array of articles with all properties", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toHaveLength(12);
+        body.articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              article_id: expect.any(Number),
+              votes: expect.any(Number),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("200 - Returns array in descending date order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("404 - Returns an error message when the topic doesn't exist", () => {
+    return request(app)
+      .get("/api/articles?topic=northcoders")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("This topic does not exist!");
       });
   });
 });

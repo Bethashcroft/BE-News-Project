@@ -1,5 +1,6 @@
 const db = require("../db/connection");
 const format = require("pg-format");
+const articles = require("../db/data/test-data/articles");
 
 exports.chooseTopics = () => {
   return db.query("SELECT * FROM topics").then((response) => {
@@ -49,5 +50,36 @@ exports.updateArticle = (id, votes) => {
       });
     }
     return response.rows[0];
+  });
+};
+
+exports.chooseAllArticles = (topic) => {
+  return exports.chooseTopics().then((validTopics) => {
+    let sqlCommand = `SELECT articles.*, COUNT(comment_id)::INT AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id`;
+
+    let articleArray = [];
+    let slugArray = [];
+
+    for (let i = 0; i < validTopics.length; i++) {
+      slugArray.push(validTopics[i].slug);
+    }
+
+    if (topic) {
+      if (slugArray.includes(topic)) {
+        sqlCommand += ` WHERE topic = $1`;
+        articleArray.push(topic);
+      } else {
+        return Promise.reject({
+          status: 404,
+          msg: "This topic does not exist!",
+        });
+      }
+    }
+
+    sqlCommand += ` GROUP BY articles.article_id ORDER BY created_at desc;`;
+
+    return db.query(sqlCommand, articleArray).then((response) => {
+      return response.rows;
+    });
   });
 };
