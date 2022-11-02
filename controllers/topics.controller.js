@@ -4,6 +4,7 @@ const {
   chooseUsers,
   updateArticle,
   chooseAllArticles,
+  chooseCommentsByArticleId,
 } = require("../models/topics.model");
 
 exports.getTopics = (request, response, next) => {
@@ -47,6 +48,15 @@ exports.getAllArticles = (request, response, next) => {
   chooseAllArticles(topic)
     .then((articles) => {
       response.status(200).send({ articles });
+    })
+    .catch(next);
+};
+
+exports.getCommentsByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+  chooseCommentsByArticleId(article_id)
+    .then((comments) => {
+      response.status(200).send({ comments });
     })
     .catch(next);
 };
