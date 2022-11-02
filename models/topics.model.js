@@ -89,3 +89,13 @@ exports.chooseAllArticles = (topic) => {
     });
   });
 };
+
+exports.chooseCommentsByArticleId = (article_id) => {
+  return exports.chooseArticleById(article_id).then(() => {
+    const commentCommand = `SELECT * FROM comments WHERE article_id =$1 ORDER BY created_at DESC;`;
+
+    return db.query(commentCommand, [article_id]).then(({ rows: comments }) => {
+      return comments;
+    });
+  });
+};

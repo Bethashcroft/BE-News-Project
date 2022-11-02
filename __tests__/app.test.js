@@ -163,7 +163,7 @@ describe("PATCH: 200 - /api/articles/:articles_id", () => {
   });
 });
 
-describe.only("GET: 200 - /api/articles", () => {
+describe("GET: 200 - /api/articles", () => {
   test("Return an array of articles with all properties", () => {
     return request(app)
       .get("/api/articles")
@@ -207,6 +207,30 @@ describe.only("GET: 200 - /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.articles).toEqual([]);
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200 - Returns descending comments array when given the article id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toHaveLength(11);
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+        body.comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              body: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              comment_id: expect.any(Number),
+            })
+          );
+        });
       });
   });
 });
