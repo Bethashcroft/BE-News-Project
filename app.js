@@ -6,6 +6,7 @@ const {
   patchArticles,
   getAllArticles,
   getCommentsByArticleId,
+  getPostedComment,
 } = require("./controllers/topics.controller");
 const app = express();
 app.use(express.json());
@@ -17,6 +18,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.patch("/api/articles/:article_id", patchArticles);
+
+app.post("/api/articles/:article_id/comments", getPostedComment);
 
 app.all("*", function (req, res, next) {
   res.status(404).send({ status: 404, msg: "invalid path" });

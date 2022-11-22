@@ -99,3 +99,17 @@ exports.chooseCommentsByArticleId = (article_id) => {
     });
   });
 };
+
+exports.postedComment = (id, body, username) => {
+  if (body.length === 0) {
+    return Promise.reject({ status: 404, msg: "Body length is 0" });
+  }
+  return db
+    .query(
+      "INSERT INTO comments (article_id, body, author) VALUES ($1, $2, $3) RETURNING *;",
+      [id, body, username]
+    )
+    .then((response) => {
+      return response.rows[0];
+    });
+};

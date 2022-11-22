@@ -5,6 +5,7 @@ const {
   updateArticle,
   chooseAllArticles,
   chooseCommentsByArticleId,
+  postedComment,
 } = require("../models/topics.model");
 
 exports.getTopics = (request, response, next) => {
@@ -57,6 +58,20 @@ exports.getCommentsByArticleId = (request, response, next) => {
   chooseCommentsByArticleId(article_id)
     .then((comments) => {
       response.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.getPostedComment = (request, response, next) => {
+  const { article_id } = request.params;
+  const { username, body } = request.body;
+
+  chooseArticleById(article_id)
+    .then((response) => {
+      return postedComment(article_id, body, username);
+    })
+    .then((comment) => {
+      response.status(201).send({ comment });
     })
     .catch(next);
 };

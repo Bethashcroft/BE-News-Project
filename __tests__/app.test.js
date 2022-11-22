@@ -234,3 +234,22 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST: /api/articles/:article_id/comments", () => {
+  test("Returns a 201 after taking a username and body and responding with the correct posted comment", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({ username: "butter_bridge", body: "coolio" })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          author: "butter_bridge",
+          body: "coolio",
+          votes: 0,
+          article_id: 1,
+          comment_id: expect.any(Number),
+          created_at: expect.any(String),
+        });
+      });
+  });
+});
