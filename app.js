@@ -9,7 +9,9 @@ const {
   getPostedComment,
 } = require("./controllers/topics.controller");
 const app = express();
+const cors = require("cors");
 app.use(express.json());
+app.use(cors());
 
 app.get("/api/users", getUsers);
 app.get("/api/articles/:article_id", getArticleById);
